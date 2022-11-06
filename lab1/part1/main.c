@@ -2,7 +2,7 @@
 #include <sys/types.h>
 #include <stdio.h>
 #include <unistd.h>
-#include "../utilities.c"
+#include "../../utilities.c"
 
 int main() {
     int fd[2]; // create a pipe
