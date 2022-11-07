@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <unistd.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <mqueue.h>
@@ -21,18 +22,21 @@ int main() {
     if (mqd == (mqd_t) -1) errExit("mq_open");
 
     // Read the message from the message queue
-    if (mq_receive(mqd, buf, MAX_SIZE, NULL) == -1) errExit("mq_receive");
+    ssize_t len = mq_receive(mqd, buf, MAX_SIZE, NULL);
+    if (len == -1) errExit("mq_receive");
     printf("Message: %s\n", buf);
 
     // Count number of words
     int word_count = 0;
-    for (int i = 0; i < MAX_SIZE-1; i++) 
+    for (int i = 0; i < len-1; i++) 
         if ((buf[i] == ' ' || buf[i] == '\n' || buf[i] == '\t') && (buf[i+1] != ' ' || buf[i+1] != '\n' || buf[i+1] != '\t'))
             word_count++;
-    if (buf[MAX_SIZE] != ' ' || buf[MAX_SIZE] != '\n' || buf[MAX_SIZE] != '\t' )
+    if (buf[len] != ' ' || buf[len] != '\n' || buf[len] != '\t' )
         word_count++;
         
     printf("Word count: %d\n", word_count);
+
+    mq_unlink(my_mq);
 
     // Close the message queue
     mq_close(mqd);

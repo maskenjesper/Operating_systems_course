@@ -16,8 +16,16 @@ int main() {
     mqd = mq_open(my_mq, O_WRONLY);
     if (mqd == (mqd_t) -1) errExit("mq_open");
 
+    // Open the file to read from
+    int fd = open("words.txt", O_RDONLY);
+    
+    // Read from opened file
+    char text[100];
+    ssize_t len = read(fd, text, 100);
+    if (len == -1) errExit("read");
+
     // Write "hello" to the message queue
-    if (mq_send(mqd, write_msg, strlen(write_msg), 0) == -1) errExit("mq_send");
+    if (mq_send(mqd, text, len, 0) == -1) errExit("mq_send");
 
     // Close the message queue
     mq_close(mqd);
