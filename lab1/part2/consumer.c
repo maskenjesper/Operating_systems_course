@@ -24,6 +24,16 @@ int main() {
     if (mq_receive(mqd, buf, MAX_SIZE, NULL) == -1) errExit("mq_receive");
     printf("Message: %s\n", buf);
 
+    // Count number of words
+    int word_count = 0;
+    for (int i = 0; i < MAX_SIZE-1; i++) 
+        if ((buf[i] == ' ' || buf[i] == '\n' || buf[i] == '\t') && (buf[i+1] != ' ' || buf[i+1] != '\n' || buf[i+1] != '\t'))
+            word_count++;
+    if (buf[MAX_SIZE] != ' ' || buf[MAX_SIZE] != '\n' || buf[MAX_SIZE] != '\t' )
+        word_count++;
+        
+    printf("Word count: %d\n", word_count);
+
     // Close the message queue
     mq_close(mqd);
 }
