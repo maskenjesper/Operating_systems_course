@@ -1,7 +1,5 @@
 // Program to illustrate the command ls / | wc -l
-#include <sys/types.h>
 #include <sys/wait.h>
-#include <stdio.h>
 #include <unistd.h>
 #include "../../utilities.c"
 
