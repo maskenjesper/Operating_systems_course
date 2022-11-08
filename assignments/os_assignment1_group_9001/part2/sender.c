@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <sys/stat.h>
 #include "../utilities.h"
 
 /**
@@ -13,7 +14,7 @@
 int main(int argc, char** argv)
 {
     if(argc != 4)
-    errExit("Bad arguments\nargv[1] = text file to read from.\nargv[2] = size of text.\nargv[3] = name of message queue.\n");
+        errExit("Bad arguments\nargv[1] = text file to read from.\nargv[2] = size of text.\nargv[3] = name of message queue.\n");
 
     const char *text_name = argv[1];
     int text_size = atoi(argv[2]);
@@ -22,17 +23,22 @@ int main(int argc, char** argv)
     char buffer[text_size];
     int fd = open(text_name, O_RDONLY);
     ssize_t read_bytes = read(fd, buffer, text_size);
+    close(fd);
 
     mqd_t mqd;
     int flags = O_RDWR | O_CREAT;
-    mode_t perm = 777;
-    struct mq_attr *attr_ptr;
-    attr_ptr = NULL;
+    mode_t perm = S_IRUSR | S_IWUSR;
+    struct mq_attr attr_ptr;
+    attr_ptr.mq_maxmsg = 1;
+    attr_ptr.mq_msgsize = text_size;
 
-    mqd = mq_open(mq_name, flags, perm, attr_ptr);
+    mqd = mq_open(mq_name, flags, perm, &attr_ptr);
     if(mqd == -1)
         errExit("can not open message queue");	
 
     if(mq_send(mqd, buffer, read_bytes, 0) == -1)
         errExit("can not send msg");
+
+    if(mq_close(mqd) == -1)
+        errExit("cannot close mq");
 }

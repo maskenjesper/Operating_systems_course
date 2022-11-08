@@ -3,7 +3,8 @@
 #include <unistd.h>
 #include "../utilities.h"
 
-int main() {
+int main() 
+{
     int fd[2]; // create a pipe
     if (pipe(fd) == -1) 
         errExit("pipe");
@@ -11,7 +12,8 @@ int main() {
     pid_t pid = fork();
     if (pid == -1) 
         errExit("fork");
-    else if (pid == 0) { // child
+    else if (pid == 0) 
+    { // child
         if (close(fd[0]) == -1) // close unused read end
             errExit("close");
         dup2(fd[1], STDOUT_FILENO); // change starnard output to pipe
@@ -21,7 +23,8 @@ int main() {
         if (execv("/bin/ls", args) == -1) // replace process with ls program
             errExit("execv");
     }
-    else { // parent
+    else 
+    { // parent
         if (close(fd[1]) == -1) // close unused write end
             errExit("close");
         dup2(fd[0], STDIN_FILENO); // change starnard input to pipe

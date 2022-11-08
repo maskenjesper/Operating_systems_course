@@ -4,16 +4,24 @@
 #include <stdlib.h>
 #include "../utilities.h"
 
-int count_words(char* buffer, int length)
+int count_words(char* buf, int len)
 {
-	int i;
-	int words = 0;
-	for(i = 0; i < length-2; i++)
+	int word_count = 0;
+    for (int i = 0; i < len-1; i++) 
+        if ((buf[i] == ' ' || buf[i] == '\n' || buf[i] == '\t') && (buf[i+1] != ' ' || buf[i+1] != '\n' || buf[i+1] != '\t'))
+            word_count++;
+    if (buf[len] != ' ' || buf[len] != '\n' || buf[len] != '\t' )
+        word_count++;
+
+	return word_count;
+
+	/*int words = 0;
+	for(int i = 0; i < length-2; i++)
 	{
 	    if( (buffer[i] != ' ' && buffer[i+1] == ' ' && buffer[i+2] != ' ') || (buffer[i+2] == '\n' && i != length-3) )
 		words++;
 	}
-	return ++words;
+	return ++words;*/
 }
 
 /**
@@ -26,7 +34,7 @@ int main(int argc, char** argv)
 
 	const char *queue_name = argv[1];
 	mqd_t mqd;	
-	void *read_buffer;
+	char *read_buffer;
 	struct mq_attr attr;
 	int flags = O_RDONLY;
 
