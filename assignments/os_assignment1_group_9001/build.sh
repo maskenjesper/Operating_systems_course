@@ -1,6 +1,7 @@
 #! /bin/sh
 
-# Create out 
+# Create out structure
+mkdir -p out out/part1 out/part2
 
 # Compile
 gcc -o out/part1/main part1/main.c utilities.c
