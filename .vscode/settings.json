@@ -10,6 +10,7 @@
         "stdexcept": "c",
         "streambuf": "c",
         "functional": "c",
-        "utilities.h": "c"
+        "utilities.h": "c",
+        "unistd.h": "c"
     }
 }

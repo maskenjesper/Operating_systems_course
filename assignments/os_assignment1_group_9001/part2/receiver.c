@@ -8,20 +8,12 @@ int count_words(char* buf, int len)
 {
 	int word_count = 0;
     for (int i = 0; i < len-1; i++) 
-        if ((buf[i] == ' ' || buf[i] == '\n' || buf[i] == '\t') && (buf[i+1] != ' ' || buf[i+1] != '\n' || buf[i+1] != '\t'))
+        if ((buf[i] == ' ' || buf[i] == '\n' || buf[i] == '\t') && !(buf[i+1] == ' ' || buf[i+1] == '\n' || buf[i+1] == '\t')) 
             word_count++;
-    if (buf[len] != ' ' || buf[len] != '\n' || buf[len] != '\t' )
+    if (!(buf[len] == ' ' || buf[len] == '\n' || buf[len] == '\t'))
         word_count++;
 
 	return word_count;
-
-	/*int words = 0;
-	for(int i = 0; i < length-2; i++)
-	{
-	    if( (buffer[i] != ' ' && buffer[i+1] == ' ' && buffer[i+2] != ' ') || (buffer[i+2] == '\n' && i != length-3) )
-		words++;
-	}
-	return ++words;*/
 }
 
 /**
@@ -32,20 +24,20 @@ int main(int argc, char** argv)
 	if(argc != 2)
 	    errExit("Bad arguments\nargv[1] = Name of message queue.\n");
 
-	const char *queue_name = argv[1];
-	mqd_t mqd;	
+	const char *mq_name = argv[1];
+	mqd_t mqd;
 	char *read_buffer;
 	struct mq_attr attr;
 	int flags = O_RDONLY;
 
-	mqd = mq_open(queue_name, flags);
+	mqd = mq_open(mq_name, flags);
 	if(mqd == -1)
 	    errExit("can not open queue\n");
 
 	if(mq_getattr(mqd, &attr) == -1)
 	    errExit("can not get attributes\n");
 
-	read_buffer = malloc(attr.mq_msgsize);
+	read_buffer = malloc(attr.mq_msgsize * sizeof(char));
 	if(read_buffer == NULL)
 	    errExit("the malloc failed\n");
 
@@ -53,8 +45,11 @@ int main(int argc, char** argv)
 	if(bytes_read == -1)
 	    errExit("mq_receive failed\n");
 
-	if(mq_unlink(queue_name) == -1)
-    	    errExit("can not unlink\n");
+	if(mq_close(mqd) == -1)
+		errExit("cannot close mq\n");
+
+	if(mq_unlink(mq_name) == -1)
+    	errExit("can not unlink\n");
 
 	printf("words: %d\n", count_words(read_buffer, bytes_read));
 }
