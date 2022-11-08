@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "../../../utilities.h"
+#include "../utilities.h"
 
 int count_words(char* buffer, int length)
 {
@@ -14,19 +14,6 @@ int count_words(char* buffer, int length)
 		words++;
 	}
 	return ++words;
-	
-}
-void arg_error(void)
-{
-    const char *error_msg = "argv[1] = Name of message queue.\n";
-    fprintf(stderr, error_msg, strlen(error_msg));
-    exit(1);
-}
-
-void errExit(char* msg)
-{
-    fprintf(stderr, msg, strlen(msg));
-    exit(1);
 }
 
 /**
@@ -35,7 +22,7 @@ void errExit(char* msg)
 int main(int argc, char** argv)
 {
 	if(argc != 2)
-	    arg_error();
+	    errExit("Bad arguments\nargv[1] = Name of message queue.\n");
 
 	const char *queue_name = argv[1];
 	mqd_t mqd;	
@@ -62,5 +49,4 @@ int main(int argc, char** argv)
     	    errExit("can not unlink\n");
 
 	printf("words: %d\n", count_words(read_buffer, bytes_read));
-	exit(EXIT_SUCCESS);
 }

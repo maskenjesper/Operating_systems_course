@@ -3,20 +3,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
-#include ""../../../utilities.h"
-
-void arg_error(void)
-{
-    const char *error_msg = "argv[1] = text to read from.\nargv[2] = size of text.\nargv[3] = name of message queue.\n";
-    fprintf(stderr, error_msg, strlen(error_msg));
-    exit(1);
-}
-
-void errExit(char* msg)
-{
-    fprintf(stderr, msg, strlen(msg));
-    exit(1);
-}
+#include "../utilities.h"
 
 /**
  * argv[1] = text to read from.
@@ -25,9 +12,8 @@ void errExit(char* msg)
  **/
 int main(int argc, char** argv)
 {
-
     if(argc != 4)
-    arg_error();
+    errExit("Bad arguments\nargv[1] = text file to read from.\nargv[2] = size of text.\nargv[3] = name of message queue.\n");
 
     const char *text_name = argv[1];
     int text_size = atoi(argv[2]);
@@ -45,10 +31,8 @@ int main(int argc, char** argv)
 
     mqd = mq_open(mq_name, flags, perm, attr_ptr);
     if(mqd == -1)
-        errExit("can not open message queue\n");	
+        errExit("can not open message queue");	
 
     if(mq_send(mqd, buffer, read_bytes, 0) == -1)
-        errExit("can not send msg\n");
-
-    exit(EXIT_SUCCESS);
+        errExit("can not send msg");
 }
