@@ -12,7 +12,7 @@ void arg_error(void)
     exit(1);
 }
 
-void error_output(char* msg)
+void errExit(char* msg)
 {
     fprintf(stderr, msg, strlen(msg));
     exit(1);
@@ -45,10 +45,10 @@ int main(int argc, char** argv)
 
     mqd = mq_open(mq_name, flags, perm, attr_ptr);
     if(mqd == -1)
-        error_output("can not open message queue\n");	
+        errExit("can not open message queue\n");	
 
     if(mq_send(mqd, buffer, read_bytes, 0) == -1)
-        error_output("can not send msg\n");
+        errExit("can not send msg\n");
 
     exit(EXIT_SUCCESS);
 }
