@@ -52,4 +52,5 @@ int main(int argc, char** argv)
     	errExit("can not unlink\n");
 
 	printf("words: %d\n", count_words(read_buffer, bytes_read));
+    free(read_buffer);
 }
