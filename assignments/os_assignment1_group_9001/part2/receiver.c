@@ -15,13 +15,11 @@ int isBlank(char c)
 int count_words(char* buf, int len)
 {
 	int word_count = 0;
-	if (len > 0 && isBlank(buf[0]))
-		word_count--;
+	if (len > 0 && !isBlank(buf[0]))
+		word_count++;
     for (int i = 0; i < len-1; i++) 
         if (isBlank(buf[i]) && !isBlank(buf[i+1])) 
             word_count++;
-    if (!isBlank(len))
-        word_count++;
 
 	return word_count;
 }
