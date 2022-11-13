@@ -4,13 +4,23 @@
 #include <stdlib.h>
 #include "../utilities.h"
 
+int isBlank(char c) 
+{
+	if (c == ' ' || c == '\n' || c == '\t')
+		return 1;
+	else
+		return 0;
+}
+
 int count_words(char* buf, int len)
 {
 	int word_count = 0;
+	if (len > 0 && isBlank(buf[0]))
+		word_count--;
     for (int i = 0; i < len-1; i++) 
-        if ((buf[i] == ' ' || buf[i] == '\n' || buf[i] == '\t') && !(buf[i+1] == ' ' || buf[i+1] == '\n' || buf[i+1] == '\t')) 
+        if (isBlank(buf[i]) && !isBlank(buf[i+1])) 
             word_count++;
-    if (!(buf[len] == ' ' || buf[len] == '\n' || buf[len] == '\t'))
+    if (!isBlank(len))
         word_count++;
 
 	return word_count;
