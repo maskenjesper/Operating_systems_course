@@ -35,21 +35,21 @@ int main()
 void *threadWork() 
 {
     int times_worked = 0;
-    int running = 1;
-    while (running) 
+    while (1) 
     {
         pthread_mutex_lock(&mtx);
-
         if (buffer < 15)
         {
             printf("TID: %d, PID: %d, Buffer: %d\n", pthread_self(), getpid(), buffer);
             buffer++;
-            times_worked++;
         }
         else 
-            running = 0;
-
+        {
+            pthread_mutex_unlock(&mtx);
+            break;
+        }
         pthread_mutex_unlock(&mtx);
+        times_worked++;
     }
     return times_worked;
 }
