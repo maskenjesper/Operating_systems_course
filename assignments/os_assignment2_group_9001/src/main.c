@@ -6,19 +6,16 @@
 
 #include "dependencies/utilities.h"
 
-int buffer = 0;
 void *threadWork();
+
+int buffer = 0;
 pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
 
 int main() 
 {
     pthread_t tid[3];
-    pthread_attr_t attr[3];
     for (int i = 0; i < 3; i++) 
-    {
-        pthread_attr_init(&attr[i]);
-        pthread_create(&tid[i], &attr[i], threadWork, NULL);
-    }
+        pthread_create(&tid[i], NULL, threadWork, NULL);
 
     void *times_worked[] = {0, 0, 0};
     int total_times_worked = 0;
@@ -29,7 +26,6 @@ int main()
         printf("TID %d worked on the buffer %d times\n", tid[i], (int) times_worked[i]);
     }
     printf("Total buffer accesses: %d\n", total_times_worked);
-
 }
 
 void *threadWork() 
