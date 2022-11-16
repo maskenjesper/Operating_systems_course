@@ -34,16 +34,16 @@ void *threadWork()
     while (1) 
     {
         pthread_mutex_lock(&mtx);
-        if (buffer < 15)
-        {
-            printf("TID: %d, PID: %d, Buffer: %d\n", pthread_self(), getpid(), buffer);
-            buffer++;
-        }
-        else 
-        {
-            pthread_mutex_unlock(&mtx);
-            break;
-        }
+            if (buffer < 15)
+            {
+                printf("TID: %d, PID: %d, Buffer: %d\n", pthread_self(), getpid(), buffer);
+                buffer++;
+            }
+            else 
+            {
+                pthread_mutex_unlock(&mtx);
+                break;
+            }
         pthread_mutex_unlock(&mtx);
         times_worked++;
     }
