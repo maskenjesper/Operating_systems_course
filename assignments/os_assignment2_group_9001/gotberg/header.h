@@ -3,7 +3,8 @@
 #include <unistd.h>
 #include <stdio.h>
 
-void handle_error(int);
+extern pthread_t tid[];
+void handle_error(char*, int);
 void start_thread(pthread_t *, void *(func)(void *), int *);
-void join_thread(pthread_t *);
+void join_thread(pthread_t);
 
