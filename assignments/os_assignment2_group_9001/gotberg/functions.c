@@ -8,11 +8,11 @@ handle_error (char* msg, int error_code)
 }
 
 void 
-start_thread (pthread_t *thread, void *(*func)(void *), int *counter)
+start_thread (pthread_t *thread, void *(*func)(void *), struct thread_struct *ts)
 {
     
     int return_value;
-    return_value = pthread_create(thread, NULL, func,  counter);
+    return_value = pthread_create(thread, NULL, func,  (void *) ts);
     if(return_value != 0)
         handle_error("start_thread:", return_value);
 }
@@ -25,3 +25,4 @@ join_thread (pthread_t thread)
     if(return_value != 0)
         handle_error("join_thread:", return_value);
 }
+
