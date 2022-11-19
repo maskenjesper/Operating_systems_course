@@ -8,7 +8,6 @@ runner (void *ts)
 {
     struct thread_struct *strcut_ptr = ts;
 
-
     pthread_mutex_lock(&lock);
     if(buffer < 15)
     {
@@ -32,13 +31,7 @@ main (int argc, char** argv)
     
     // Set all counters to zero
     for(int i = 0; i<3; i++)
-    {
-        ts->counter = 0;
-        ts++;
-    }
-
-    // Reset the pointer to first address
-    ts += -3; 
+        (*(ts + i)).counter = 0; // Really unreadable way of incrementing an address without changing the pointer
 
     for(int i = 0; i<3; i++)
         start_thread(&thread[i], runner, ts + i);
@@ -50,7 +43,7 @@ main (int argc, char** argv)
     {
         total += ts->counter;
         printf("Thread: %ld, incremented the buffer %d times.\n", (long) ts->tid, ts->counter);
-        ts++;
+        ts++; 
     }
     printf("Total buffer accesses:%d\nFinal buffer value:%d\n", total, buffer);
 }
