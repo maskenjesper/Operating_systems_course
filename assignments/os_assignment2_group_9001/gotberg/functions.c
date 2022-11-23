@@ -8,11 +8,11 @@ handle_error (char* msg, int error_code)
 }
 
 void 
-start_thread (pthread_t *thread, void *(*func)(void *), struct thread_struct *ts)
+start_thread (pthread_t *thread, void *(*func)(void *), unsigned int * counter)
 {
     
     int return_value;
-    return_value = pthread_create(thread, NULL, func,  (void *) ts);
+    return_value = pthread_create(thread, NULL, func,  (void *) counter);
     if(return_value != 0)
         handle_error("start_thread:", return_value);
 }
