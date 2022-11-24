@@ -12,7 +12,7 @@ runner (void *counter)
     pthread_mutex_lock(&lock);
     if(buffer < MAX_VALUE)
     {
-        printf("%ld:\tbuffer:%d\n", (long) pthread_self(), buffer++);
+        printf("%ld:\tpid: %d\tbuffer:%d\n", (long) pthread_self(), getpid(), buffer++);
         pthread_mutex_unlock(&lock);
         *counter_ptr += 1;
         runner(counter);
