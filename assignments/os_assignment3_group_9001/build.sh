@@ -4,4 +4,4 @@
 mkdir -p out
 
 # Compile
-gcc -o out/main -pthread src/main.c src/dependencies/utilities.c
+gcc -o out/main src/main.c src/dependencies/utilities.c
