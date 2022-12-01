@@ -1,9 +1,8 @@
 #include "utilities.h"
 
 void errExit(const char *cause) {
-    fprintf(stderr, "Failure! cause: ");
-    fprintf(stderr, "%s", cause);
-    fprintf(stderr, "\n");
+    fprintf(stderr, "Failure! cause: %s\nerrno: %s(%d)\n",
+            cause, strerror(errno), errno);
     exit(EXIT_FAILURE);
 }
 
@@ -28,7 +27,5 @@ int read_number(int fd) {
             break;
     }
     buf[i] = '\0';
-    int num = atoi(buf);
-    printf("%d\n", num);
-    return num;
+    return atoi(buf);
 }
