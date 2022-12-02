@@ -1,36 +1,39 @@
 #include "page_table.h"
-#include "dependencies/utilities.h"
-#include <stdio.h>
 
-pte* new_page_table() {
-    int size = 256;
-    pte* table = malloc(size * sizeof(pte));
-    init_table(table, size);
-    return table;
-}
+extern char memory[256 * 256];
+extern unsigned char nextFreeFrame;
 
-void init_table(pte* table, int size) {
-    for (int i = 0; i < size; i++) {
-        table[i].valid = 0;
+ptable* new_ptable() {
+    ptable* ptable = malloc(sizeof(ptable));
+    ptable->faults = 0;
+    ptable->table = malloc(256 * sizeof(pte));
+    for (int i = 0; i < 256; i++) {
+        ptable->table[i].valid = 0;
     }
+    return ptable;
 }
 
-unsigned char get_frame(pte* table, unsigned char page, frame* memory) {
-    if (table[page].valid != 1) {
+void free_ptable(ptable* ptable) {
+    free(ptable->table);
+    free(ptable);
+}
+
+int pt_get_frame(ptable* table, int page) {
+    if (table->table[page].valid != 1) { // page fault
+        // open backing store
         FILE* f = fopen("data/BACKING_STORE.bin", "rb");
         if (f == NULL)
             errExit("fopen");
+        // set correct read location
         fseek(f, page * 256L, SEEK_SET);
-        for (int i = 0; i < 256; i++) {
-            if (memory[i].occupied == 0) {
-                memory[i].occupied = 1;
-                table[page].frame = i;
-                fread(memory[i].buf, 1, 256, f);
-                table[page].valid = 1;
-                break;
-            }
-        }
+        // read the page into memory at next free frame
+        fread(&memory[nextFreeFrame * 256], 1, 256, f);
         fclose(f);
+
+        // update page table with frame reference
+        table->table[page].valid = 1;
+        table->table[page].frame = nextFreeFrame++;
+        table->faults++;
     }
-    return table[page].frame;
+    return table->table[page].frame;
 }

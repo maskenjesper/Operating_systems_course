@@ -4,9 +4,13 @@
 #include <sys/fcntl.h>
 #include <unistd.h>
 
-#include "dependencies/utilities.h"
-#include "memory.h"
+#include "utilities.h"
 #include "page_table.h"
+#include "tlb.h"
+
+// allocate (physical) memory space
+char memory[256 * 256];
+unsigned char nextFreeFrame = 0;
 
 int main(int argc, char *argv[]) {
     // check parameters
@@ -20,9 +24,9 @@ int main(int argc, char *argv[]) {
     if (fd == -1) 
         errExit("open");
 
-    // create page table and memory
-    pte* ptable = new_page_table();
-    frame* memory = new_memory();
+    // create page table and tlb
+    ptable* ptable = new_ptable();
+    tlb* tlb = new_tlb();
 
     // read words from file
     int count = 0;
@@ -34,19 +38,28 @@ int main(int argc, char *argv[]) {
         else if (laddr == -2) 
             break; 
         // split into parts
-        unsigned char page_n = page_number(laddr);
-        unsigned char offset_n = offset_number(laddr);
+        int page_n = (laddr & 0xff00) >> 8;
+        int offset_n = laddr & 0xff;
         // find mapped frame
-        unsigned char frame_n = get_frame(ptable, page_n, memory);
-        printf("page: %d, offset: %d, frame: %d\n", page_n, offset_n, frame_n);
+        int frame_n = tlb_get_frame(tlb, page_n);
+        if (frame_n == -1) {
+            frame_n = pt_get_frame(ptable, page_n);
+            tlb_add_entry(tlb, page_n, frame_n);
+        }
+        // construct physical address
         int paddr = (frame_n << 8) | offset_n;
-        char val = read_byte(frame_n, offset_n, memory);
+        char val = memory[paddr];
+
+        // printf("page: %d, offset: %d, frame: %d\n", page_n, offset_n, frame_n);
         printf("Virtual address: %d Physical address: %d Value: %d\n",
                laddr, paddr, val);
+        count++;
     }
     
-    free(ptable);
-    free(memory);
+    printf("Page-fault rate: %f\nTLB hit rate: %f", (float) (ptable->faults)/count, (float) (tlb->hits)/count);
+
+    free_ptable(ptable);
+    free_tlb(tlb);
 
     // close file
     if (close(fd) == -1)

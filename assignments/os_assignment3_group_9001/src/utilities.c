@@ -6,14 +6,6 @@ void errExit(const char *cause) {
     exit(EXIT_FAILURE);
 }
 
-unsigned char page_number(int laddr) {
-    return (laddr & 0xff00) >> 8;
-}
-
-unsigned char offset_number(int laddr) {
-    return laddr & 0xff;
-}
-
 int read_number(int fd) {
     char buf[10];
     int i;

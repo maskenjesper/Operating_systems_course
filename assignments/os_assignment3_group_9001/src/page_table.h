@@ -3,13 +3,18 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "memory.h"
+#include "utilities.h"
 
 typedef struct pte {
-    char valid;
-    char frame;
+    int valid;
+    int frame;
 } pte;
 
-pte* new_page_table();
-void init_table(pte*, int);
-unsigned char get_frame(pte* table, unsigned char page, frame* memory);
+typedef struct ptable {
+    pte* table;
+    int faults;
+} ptable;
+
+ptable* new_ptable();
+void free_ptable(ptable* ptable);
+int pt_get_frame(ptable* table, int page);
