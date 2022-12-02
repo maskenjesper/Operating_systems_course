@@ -8,6 +8,14 @@
 #include "page_table.h"
 #include "tlb.h"
 
+// specs
+const int 
+PAGESIZE = 256,
+FRAMESIZE = 256,
+PAGECOUNT = 256,
+FRAMECOUNT = 256,
+TLBSIZE = 16;
+
 // allocate (physical) memory space
 char memory[256 * 256];
 unsigned char nextFreeFrame = 0;
@@ -50,13 +58,13 @@ int main(int argc, char *argv[]) {
         int paddr = (frame_n << 8) | offset_n;
         char val = memory[paddr];
 
-        // printf("page: %d, offset: %d, frame: %d\n", page_n, offset_n, frame_n);
         printf("Virtual address: %d Physical address: %d Value: %d\n",
                laddr, paddr, val);
         count++;
     }
     
-    printf("Page-fault rate: %f\nTLB hit rate: %f", (float) (ptable->faults)/count, (float) (tlb->hits)/count);
+    printf("Page-fault rate: %f\nTLB hit rate: %f", 
+           (float) (ptable->faults)/count, (float) (tlb->hits)/count);
 
     free_ptable(ptable);
     free_tlb(tlb);
