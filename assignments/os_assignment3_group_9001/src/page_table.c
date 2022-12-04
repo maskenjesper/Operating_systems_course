@@ -7,25 +7,28 @@ PAGESIZE,
 PAGECOUNT,
 FRAMESIZE;
 
-ptable* new_ptable() {
+ptable* new_ptable() 
+{
     ptable* ptable = malloc(sizeof(ptable));
     ptable->faults = 0;
     ptable->table = malloc(PAGECOUNT * sizeof(pte));
-    for (int i = 0; i < PAGECOUNT; i++) {
+    for (int i = 0; i < PAGECOUNT; i++) 
         ptable->table[i].valid = 0;
-    }
     return ptable;
 }
 
-void free_ptable(ptable* ptable) {
+void free_ptable(ptable* ptable) 
+{
     free(ptable->table);
     free(ptable);
 }
 
-int pt_get_frame(ptable* table, int page) {
-    if (table->table[page].valid != 1) { // page fault
+int pt_get_frame(ptable* table, int page) 
+{
+    if (table->table[page].valid != 1) // page fault
+    { 
         // open backing store
-        FILE* f = fopen("data/BACKING_STORE.bin", "rb");
+        FILE* f = fopen("../data/BACKING_STORE.bin", "rb");
         if (f == NULL)
             errExit("fopen");
         // set correct read location

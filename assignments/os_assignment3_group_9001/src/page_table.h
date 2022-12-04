@@ -5,12 +5,14 @@
 
 #include "utilities.h"
 
-typedef struct pte {
+typedef struct pte 
+{
     int valid;
     int frame;
 } pte;
 
-typedef struct ptable {
+typedef struct ptable 
+{
     pte* table;
     int faults;
 } ptable;

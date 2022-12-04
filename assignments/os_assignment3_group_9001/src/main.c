@@ -20,9 +20,11 @@ TLBSIZE = 16;
 char memory[256 * 256];
 unsigned char nextFreeFrame = 0;
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) 
+{
     // check parameters
-    if (argc != 2) {
+    if (argc != 2) 
+    {
         printf("Usage: main <filename>\n");
         exit(1);
     }
@@ -38,7 +40,8 @@ int main(int argc, char *argv[]) {
 
     // read words from file
     int count = 0;
-    while (1) {
+    while (1) 
+    {
         // read logical address
         int laddr = read_number(fd);
         if (laddr == -1) 
@@ -50,7 +53,8 @@ int main(int argc, char *argv[]) {
         int offset_n = laddr & 0xff;
         // find mapped frame
         int frame_n = tlb_get_frame(tlb, page_n);
-        if (frame_n == -1) {
+        if (frame_n == -1) 
+        {
             frame_n = pt_get_frame(ptable, page_n);
             tlb_add_entry(tlb, page_n, frame_n);
         }

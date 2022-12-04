@@ -3,13 +3,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-typedef struct tlbe {
+typedef struct tlbe 
+{
     int valid;
     int page;
     int frame;
 } tlbe;
 
-typedef struct tlb {
+typedef struct tlb 
+{
     tlbe* table;
     int pos;
     int hits;
