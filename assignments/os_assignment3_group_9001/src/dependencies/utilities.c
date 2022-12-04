@@ -71,27 +71,13 @@ void get_performance_data()
 
 void tbl_enqueue(uint8_t page_index)
 {
-    // if fifo has empty nodes:
-    if(tbl_ptr->size < tbl_ptr->max)
-    {
-        tbl_ptr->fifo[tbl_ptr->in].logical_address = page_index * 256;
-        tbl_ptr->fifo[tbl_ptr->in].physcial_address = pt_ptr[page_index].frame_address;
-
-        tbl_ptr->in++;
-        tbl_ptr->size++;
-
-        // prevents "in pointer" from accessing 2:nd node instead of 1:st 
-        // the first time if-statement is false.
-        if( tbl_ptr->in == tbl_ptr->max )
-            tbl_ptr->in--;
-        return;
-    }
-    // keeps "in pointer" in bounds.
-    tbl_ptr->in = (tbl_ptr->in + 1) % tbl_ptr->max; 
     // assign new value to least new node
     tbl_ptr->fifo[tbl_ptr->in].logical_address = page_index * 256; 
     tbl_ptr->fifo[tbl_ptr->in].physcial_address = pt_ptr[page_index].frame_address;
-    return;
+    // keeps "in pointer" in bounds.
+    tbl_ptr->in = (tbl_ptr->in + 1) % tbl_ptr->max; 
+    if( tbl_ptr->size < tbl_ptr->max)
+        tbl_ptr->size++;
 }
 
 uint16_t tbl_lookup(uint8_t page_index)
@@ -173,7 +159,7 @@ void print_page_table()
 void print_queue()
 {
     printf("TBL:\n");
-    for(int i = 0; i<tbl_ptr->max; i++)
+    for(int i = 0; i<tbl_ptr->size; i++)
         printf("[%d]: logical_address: %d : physcial_address: %d\n", i, tbl_ptr->fifo[i].logical_address/256, tbl_ptr->fifo[i].physcial_address);
     printf("\n");
 }
