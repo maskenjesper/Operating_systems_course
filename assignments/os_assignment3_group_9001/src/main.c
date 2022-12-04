@@ -18,7 +18,7 @@ TLBSIZE = 16;
 
 // allocate (physical) memory space
 char memory[256 * 256];
-unsigned char nextFreeFrame = 0;
+unsigned char nextVictimFrame = 0;
 
 int main(int argc, char *argv[]) 
 {
@@ -76,5 +76,4 @@ int main(int argc, char *argv[])
     // close file
     if (close(fd) == -1)
         errExit("close");
-    return 0;
 }

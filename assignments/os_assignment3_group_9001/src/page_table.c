@@ -1,11 +1,12 @@
 #include "page_table.h"
 
 extern char memory[];
-extern unsigned char nextFreeFrame;
+extern unsigned char nextVictimFrame;
 extern const int
 PAGESIZE,
 PAGECOUNT,
-FRAMESIZE;
+FRAMESIZE,
+FRAMECOUNT;
 
 ptable* new_ptable() 
 {
@@ -34,13 +35,15 @@ int pt_get_frame(ptable* table, int page)
         // set correct read location
         fseek(f, page * (long) PAGESIZE, SEEK_SET);
         // read the page into memory at next free frame
-        fread(&memory[nextFreeFrame * FRAMESIZE], 1, PAGESIZE, f);
+        fread(&memory[nextVictimFrame * FRAMESIZE], 1, PAGESIZE, f);
         fclose(f);
 
         // update page table with frame reference
         table->table[page].valid = 1;
-        table->table[page].frame = nextFreeFrame++;
+        table->table[page].frame = nextVictimFrame;
         table->faults++;
+        // FIFO page replacement policy
+        nextVictimFrame = (nextVictimFrame+1)%FRAMECOUNT;
     }
     return table->table[page].frame;
 }

@@ -33,10 +33,8 @@ int tlb_get_frame(tlb* tlb, int page)
 
 void tlb_add_entry(tlb* tlb, int page, int frame) 
 {
-    if (tlb->pos >= TLBSIZE) 
-        tlb->pos = 0;
     tlb->table[tlb->pos].valid = 1;
     tlb->table[tlb->pos].page = page;
     tlb->table[tlb->pos].frame = frame;
-    tlb->pos++;
+    tlb->pos = (tlb->pos+1)%16;
 }
