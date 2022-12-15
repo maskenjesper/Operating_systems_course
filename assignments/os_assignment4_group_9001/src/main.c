@@ -84,6 +84,7 @@ int* scheduleSCAN(int* req_seq, int len, int pos)
 
     printf("SCAN schedule:\n\t");
     printArray(schedule, len);
+    free(sorted);
     return schedule;
 }
 
@@ -103,6 +104,7 @@ int* scheduleCSCAN(int* req_seq, int len, int pos) // TODO: implement
 
     printf("C-SCAN schedule:\n\t");
     printArray(schedule, len);
+    free(sorted);
     return schedule;
 }
 
