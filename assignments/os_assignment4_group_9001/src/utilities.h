@@ -10,4 +10,4 @@ void errExit(const char *cause);
 void printArray(int* array, int len);
 int* copyArray(int* arrar, int len);
 void sort(int* array, int len);
-int find(int* array, int len, int value); // Assumes array in ascending order
+int find(int* array, int len, int value);
