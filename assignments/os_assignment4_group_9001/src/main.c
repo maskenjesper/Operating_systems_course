@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 
 const int cylinders = 5000;
 
@@ -37,7 +38,7 @@ int main (int argc, char *argv[])
     printf("Head travel for FCFS: %d\n", headTravel(fcfs, initPos, queueSize));
     printf("Head travel for SSTF: %d\n", headTravel(sstf, initPos, queueSize));
     printf("Head travel for SCAN: %d\n", headTravel(scan, initPos, queueSize + 1));
-    printf("Head travel for C-SCAN: %d\n", headTravel(cscan, initPos, queueSize + 1));
+    printf("Head travel for C-SCAN: %d\n", headTravel(cscan, initPos, queueSize + 2));
     printf("Head travel for Look: %d\n", headTravel(look, initPos, queueSize));
     printf("Head travel for C-Look: %d\n", headTravel(clook, initPos, queueSize));
 
@@ -47,8 +48,9 @@ int main (int argc, char *argv[])
 int* generateRequestSequence(int len) 
 {
     int* requestSequence = malloc(len * sizeof(int));
+    unsigned int seed = time(NULL);
     for (int i = 0; i < len; i++) 
-        requestSequence[i] = rand() % cylinders;
+        requestSequence[i] = rand_r(&seed) % cylinders;
     return requestSequence;
 }
 
@@ -128,7 +130,7 @@ int* pathSCAN(int* req_seq, int len, int pos)
 
 int* pathCSCAN(int* req_seq, int len, int pos) 
 {
-    int* path = malloc(len * sizeof(int) + sizeof(int));
+    int* path = malloc(len * sizeof(int) + 2 * sizeof(int));
     int* sorted = copyArray(req_seq, len);
     sort(sorted, len);
 
@@ -140,6 +142,7 @@ int* pathCSCAN(int* req_seq, int len, int pos)
             path[path_pos++] = i;
     }
     path[path_pos++] = cylinders - 1; 
+    path[path_pos++] = 0; 
     for (int i = 0; i < pos; i++)
     {
         int occurences = find(sorted, len, i);

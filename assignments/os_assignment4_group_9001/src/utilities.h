@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
+#include <math.h>
 
 void errExit(const char *cause);
 void printArray(int* array, int len);

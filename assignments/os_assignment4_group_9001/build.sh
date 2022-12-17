@@ -4,4 +4,4 @@
 mkdir -p out
 
 # Compile
-gcc -o out/main src/main.c src/utilities.c
+gcc -lm -o out/main src/main.c src/utilities.c
